@@ -1,14 +1,14 @@
-up:
-	@echo "docker run -it -v ${PWD}/work:/root/work --name trans -p 3000:3000 mynode /bin/bash\ndocker start trans\ndocker exec -it trans /bin/bash" > run.sh
-	@chmod +x run.sh
-	@echo "run mynode"
-	@./run.sh
+all : up
 
-build:
-	@make file
-	@docker build -t mynode .
-	@echo "make mynode images"
+up :
+	docker-compose up -d --build
 
-file:
-	@echo 'FROM node\n\nRUN npm i -g @nestjs/cli' > Dockerfile
-	@echo "make Dockerfile"
+down :
+	docker-compose down
+
+fclean :
+	docker-compose down --rmi all
+	docker system prune --volumes --force --all
+
+ps :
+	docker-compose ps
