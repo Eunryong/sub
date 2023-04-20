@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.typeORMconfig = void 0;
 exports.typeORMconfig = {
     type: 'postgres',
-    host: '172.18.0.2',
+    host: 'postgres',
     port: 5432,
     username: 'dongyoki',
     password: 'asdf',

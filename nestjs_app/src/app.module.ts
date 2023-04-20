@@ -7,4 +7,3 @@ import { typeORMconfig } from './config/typeorm.config';
   imports: [BoardsModule, TypeOrmModule.forRoot(typeORMconfig)]
 })
 export class AppModule {}
-
