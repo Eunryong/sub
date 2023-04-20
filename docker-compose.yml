@@ -2,23 +2,55 @@ version : '3'
 
 services:
   nest:
-    build: ./requirements/nest/
     image: nest
+    build: ./requirements/nest/
+
+    container_name: nest
+
     restart: always
+
     ports:
       - "3000:3000"
-    # networks:
-    #   - ts_network
     volumes:
-      - nest_volume:/root/nestjs_app
+      - type: volume
+        target: /app
+        source: nest_volume
+    networks:
+      - ts_network
+
+  postgres:
+    image: postgres
+
+    container_name: postgres
+
+    restart: always
+
+    environment:
+      POSTGRES_DB: nestjs_app
+      POSTGRES_USER: dongyoki
+      POSTGRES_PASSWORD: asdf
+
+    ports:
+      - '5432:5432'
+    volumes:
+      - db_volume:/var/lib/postgresql/data
+    networks:
+      - ts_network
 
 volumes:
     nest_volume:
+      driver: 'local'
       driver_opts:
-        type: volume
+        type: 'none'
         o : 'bind'
         device: './nestjs_app'
+    db_volume:
+      driver: 'local'
+      driver_opts:
+        type: 'none'
+        o: 'bind'
+        device: 'db'
 
-# networks:
-#     ts_network:
-#       driver: bridge
+networks:
+    ts_network:
+      driver: bridge

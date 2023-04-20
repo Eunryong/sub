@@ -2,12 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BoardStatusValidationPipe = void 0;
 const common_1 = require("@nestjs/common");
-const boards_model_1 = require("../boards.model");
+const boards_entity_1 = require("../boards.entity");
 class BoardStatusValidationPipe {
     constructor() {
         this.StatusOptions = [
-            boards_model_1.BoardStatus.PRIVATE,
-            boards_model_1.BoardStatus.PUBLIC
+            boards_entity_1.BoardStatus.PRIVATE,
+            boards_entity_1.BoardStatus.PUBLIC
         ];
     }
     transform(value) {
