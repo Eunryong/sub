@@ -19,3 +19,6 @@ re :
 
 ps :
 	docker-compose ps
+
+clear :
+	rm -rf ./db/*

@@ -5,12 +5,12 @@ export enum BoardStatus {
     PRIVATE = 'PRIVATE',
 }
 
-@Entity()
+@Entity() // 해당 클래스가 엔티티임을 나타내줌
 export class Board extends BaseEntity {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn() // 해당 변수가 엔티티의 기본 키 열 임을 알려줌
     id: number;
 
-    @Column()
+    @Column() // 해당 변수가 엔티티의 열 중 하나임을 알려줌
     title: string;
 
     @Column()

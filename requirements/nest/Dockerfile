@@ -8,7 +8,7 @@ RUN npm update
 RUN npm upgrade
 RUN npm i -g @nestjs/cli
 RUN npm install uuid
-RUN npm install typeorm @nestjs/typeorm --save
-RUN npm install pg --save
+RUN npm install pg typeorm @nestjs/typeorm --save
+RUN npm install bcryptjs --save
 
 ENTRYPOINT [ "tail", "-f" ]

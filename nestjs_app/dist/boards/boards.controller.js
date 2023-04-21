@@ -22,30 +22,24 @@ let BoardsController = class BoardsController {
     constructor(boardService) {
         this.boardService = boardService;
     }
-    getAllBoard() {
-        return this.boardService.getAllBoards();
-    }
     createBoard(createBoardDto) {
         return this.boardService.createBoard(createBoardDto);
+    }
+    getAllBoard() {
+        return this.boardService.getAllBoards();
     }
     getBoardById(id) {
         return this.boardService.getBoardById(id);
     }
-    deleteBoard(id) {
-        return this.boardService.deleteBoard(id);
-    }
     updateBoardStatus(id, status) {
         return this.boardService.updateBoardStatus(id, status);
     }
+    deleteBoard(id) {
+        return this.boardService.deleteBoard(id);
+    }
 };
 __decorate([
-    (0, common_1.Get)(),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
-], BoardsController.prototype, "getAllBoard", null);
-__decorate([
-    (0, common_1.Post)(),
+    (0, common_1.Post)('/'),
     (0, common_1.UsePipes)(common_1.ValidationPipe),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -53,27 +47,33 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], BoardsController.prototype, "createBoard", null);
 __decorate([
-    (0, common_1.Get)(':id'),
+    (0, common_1.Get)('/'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], BoardsController.prototype, "getAllBoard", null);
+__decorate([
+    (0, common_1.Get)('/:id'),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], BoardsController.prototype, "getBoardById", null);
 __decorate([
-    (0, common_1.Delete)(':id'),
-    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", Promise)
-], BoardsController.prototype, "deleteBoard", null);
-__decorate([
-    (0, common_1.Patch)(':id/status'),
+    (0, common_1.Patch)('/:id/status'),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __param(1, (0, common_1.Body)('status', board_status_validation_pipe_1.BoardStatusValidationPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number, String]),
     __metadata("design:returntype", Promise)
 ], BoardsController.prototype, "updateBoardStatus", null);
+__decorate([
+    (0, common_1.Delete)('/:id'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], BoardsController.prototype, "deleteBoard", null);
 BoardsController = __decorate([
     (0, common_1.Controller)('boards'),
     __metadata("design:paramtypes", [boards_service_1.BoardsService])
