@@ -12,21 +12,39 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
 const user_repository_1 = require("./user.repository");
-const bcrypt = require("bcryptjs");
+const jwt_1 = require("@nestjs/jwt");
 let AuthService = class AuthService {
-    constructor(userRepository) {
+    constructor(userRepository, jwtService) {
         this.userRepository = userRepository;
+        this.jwtService = jwtService;
     }
     signUp(authCredentialDto) {
         return this.userRepository.signUp(authCredentialDto);
     }
     async signIn(authCredentialDto) {
-        const { username, password } = authCredentialDto;
-        const user = await this.userRepository.findOneBy({ username: username });
-        if (user && (await bcrypt.compare(password, user.password)))
-            return 'logIn Success';
-        else
-            throw new common_1.UnauthorizedException('logIn Failed');
+        const username = await this.userRepository.signIn(authCredentialDto);
+        if (!username) {
+            throw new common_1.UnauthorizedException('Invalid credentials');
+        }
+        const payload = { username };
+        const accessToken = await this.jwtService.sign(payload);
+        return { accessToken };
+    }
+    async accessIn(access_token) {
+        const url = `https://api.intra.42.fr/v2/me`;
+        const headersRequest = {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${access_token}`,
+        };
+        const axios = require('axios');
+        try {
+            const response = await axios.get(url, { headers: headersRequest });
+            return response.data.id;
+        }
+        catch (error) {
+            console.error(error);
+        }
+        ;
     }
     async getAllUser() {
         return await this.userRepository.find();
@@ -34,7 +52,8 @@ let AuthService = class AuthService {
 };
 AuthService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [user_repository_1.UserRepository])
+    __metadata("design:paramtypes", [user_repository_1.UserRepository,
+        jwt_1.JwtService])
 ], AuthService);
 exports.AuthService = AuthService;
 //# sourceMappingURL=auth.service.js.map

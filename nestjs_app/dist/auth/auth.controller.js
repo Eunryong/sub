@@ -16,6 +16,11 @@ exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
 const auth_credential_dto_1 = require("./dto/auth-credential.dto");
+const passport_1 = require("@nestjs/passport");
+const clientId = 'u-s4t2ud-e9d4fc73c7e2f975fae9586944ab9e680484c97efb501e102073d5d899543355';
+const clientSecret = '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';
+const redirectUri = 'http://localhost:3000/auth/test';
+const state = 'seeecret';
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
@@ -28,6 +33,30 @@ let AuthController = class AuthController {
     }
     getAllUser() {
         return this.authService.getAllUser();
+    }
+    authTest(req) {
+        console.log(req.user);
+    }
+    async test(req, res) {
+        const code = req.query['code'];
+        if (typeof code !== 'string') {
+            res.send(`code is wrong.\ncode: ${code}`);
+        }
+        const params = new URLSearchParams();
+        params.append('grant_type', 'authorization_code');
+        params.append('client_id', clientId);
+        params.append('client_secret', clientSecret);
+        params.append('code', code);
+        params.append('redirect_uri', redirectUri);
+        params.append('state', state);
+        const response = await fetch(`https://api.intra.42.fr/oauth/token?${params.toString()}`, {
+            method: 'post',
+        });
+        const token = await response.json();
+        console.log(token);
+        let userId = this.authService.accessIn(token.access_token);
+        userId.then((userId) => console.log(userId));
+        res.send('done');
     }
 };
 __decorate([
@@ -50,6 +79,22 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "getAllUser", null);
+__decorate([
+    (0, common_1.Post)('authTest'),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)()),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "authTest", null);
+__decorate([
+    (0, common_1.Get)('test'),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Res)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "test", null);
 AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])
