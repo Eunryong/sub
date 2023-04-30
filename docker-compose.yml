@@ -20,6 +20,7 @@ services:
 
   postgres:
     image: postgres
+    build: ./requirements/postgresql/
 
     container_name: postgres
 

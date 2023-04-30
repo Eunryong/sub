@@ -6,20 +6,21 @@ RUN mkdir /app
 WORKDIR /app
 RUN npm update
 RUN npm upgrade
-RUN npm i -g @nestjs/cli
-# for unique number
-RUN npm install uuid
+RUN npm install -g @nestjs/cli
 # for typeorm
 RUN npm install pg typeorm @nestjs/typeorm --save
 # for hashing
 RUN npm install bcryptjs --save
 # for jwt
-RUN npm install @nestjs/jwt @nestjs/passport passport passport-jwt --save
+RUN npm install @nestjs/jwt passport-jwt --save
+# for axios
 RUN npm i --save @nestjs/axios axios
 # for 42 passport
-RUN npm install passport-42
-RUN npm install passport-oauth2
-RUN npm i --save @nestjs/config
+RUN npm install passport @nestjs/passport --save
+RUN npm install passport-oauth2 --save
+RUN npm install passport-42 --save
+# for config
+RUN npm install @nestjs/config --save
 
 
 ENTRYPOINT [ "tail", "-f" ]
