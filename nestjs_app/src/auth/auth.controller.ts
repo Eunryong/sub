@@ -11,58 +11,58 @@ const state = 'seeecret';
 
 @Controller('auth')
 export class AuthController {
-    constructor(private authService: AuthService){}
+	constructor(private authService: AuthService){}
 
-    // username 중복 확인
-    // 1. findone 을 사용하여 username 이 있는지 확인 후 삽입
-    // 2. db level 에서 중복이면 에러 반환 -> entity class 선언 시 unique 데코레이터 사용
-    @Post('signup')
-    signUp(@Body(ValidationPipe) authCredentialDto: AuthCredentialDto): Promise<void> {
-        return this.authService.signUp(authCredentialDto);
-    }
+	// username 중복 확인
+	// 1. findone 을 사용하여 username 이 있는지 확인 후 삽입
+	// 2. db level 에서 중복이면 에러 반환 -> entity class 선언 시 unique 데코레이터 사용
+	@Post('signup')
+	signUp(@Body(ValidationPipe) authCredentialDto: AuthCredentialDto): Promise<void> {
+		return this.authService.signUp(authCredentialDto);
+	}
 
-    @Post('signin')
-    signIn(@Body(ValidationPipe) authCredentialDto: AuthCredentialDto): Promise<{accessToken: string}> {
-        return this.authService.signIn(authCredentialDto);
-    }
+	@Post('signin')
+	signIn(@Body(ValidationPipe) authCredentialDto: AuthCredentialDto): Promise<{accessToken: string}> {
+		return this.authService.signIn(authCredentialDto);
+	}
 
-    @Get()
-    getAllUser() :Promise<User[]> {
-        return this.authService.getAllUser();
-    }
+	@Get()
+	getAllUser() :Promise<User[]> {
+		return this.authService.getAllUser();
+	}
 
-    @Post('authTest')
-    @UseGuards(AuthGuard())
-    authTest(@Req() req) {
-        console.log(req.user);
-    }
+	@Post('authTest')
+	@UseGuards(AuthGuard())
+	authTest(@Req() req) {
+		console.log(req.user);
+	}
 
-    @Get('test')
-    async test(@Req() req: any, @Res() res: any) {
-        const code = req.query['code'];
-        // console.log(req);
-        if (typeof code !== 'string') {
-          res.send(`code is wrong.\ncode: ${code}`);
-        }
+	@Get('test')
+	async test(@Req() req: any, @Res() res: any) {
+		const code = req.query['code'];
+		// console.log(req);
+		if (typeof code !== 'string') {
+		res.send(`code is wrong.\ncode: ${code}`);
+		}
 
-        const params = new URLSearchParams();
+		const params = new URLSearchParams();
 
-        params.append('grant_type', 'authorization_code');
-        params.append('client_id', clientId);
-        params.append('client_secret', clientSecret);
-        params.append('code', code);
-        params.append('redirect_uri', redirectUri);
-        params.append('state', state);
+		params.append('grant_type', 'authorization_code');
+		params.append('client_id', clientId);
+		params.append('client_secret', clientSecret);
+		params.append('code', code);
+		params.append('redirect_uri', redirectUri);
+		params.append('state', state);
 
-        const response = await fetch(`https://api.intra.42.fr/oauth/token?${params.toString()}`, {
-          method: 'post',
-        });
+		const response = await fetch(`https://api.intra.42.fr/oauth/token?${params.toString()}`, {
+			method: 'post',
+		});
 
-        const token = await response.json();
-        console.log(token);
-        let userId = this.authService.accessIn(token.access_token);
-        userId.then((userId) => console.log(userId));
-        // return 'done';
-        res.send('done');
-    }
+		const token = await response.json();
+		console.log(token);
+		let userId = this.authService.accessIn(token.access_token);
+		userId.then((userId) => console.log(userId));
+		// return 'done';
+		res.send('done');
+	}
 }

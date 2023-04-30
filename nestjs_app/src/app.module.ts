@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BoardsModule } from './boards/boards.module';
-import { typeORMconfig } from './configs/typeorm.config';
 import { AuthModule } from './auth/auth.module';
 import { ApiModule } from './api/api.module';
+import { typeORMconfig } from './boards/configs/typeorm.config';
 
 @Module({
   imports: [

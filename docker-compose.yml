@@ -43,7 +43,7 @@ volumes:
       driver_opts:
         type: 'none'
         o : 'bind'
-        device: './nestjs_app'
+        device: './pong'
     db_volume:
       driver: 'local'
       driver_opts:

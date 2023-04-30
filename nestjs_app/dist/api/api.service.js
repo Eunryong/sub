@@ -17,7 +17,7 @@ let ApiService = class ApiService {
         this.httpService = httpService;
     }
     async findMe() {
-        let token = 'b7fd1fedb10ce877317552adf64948932d251574da672cf73c64011617f34e48';
+        let token = '7229da50527f9fcfd2f3d8c515629c6627c10313389f196f3c12f52f96fd3799';
         const url = `https://api.intra.42.fr/v2/me`;
         const headersRequest = {
             'Content-Type': 'application/json',

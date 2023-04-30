@@ -16,6 +16,10 @@ RUN npm install bcryptjs --save
 # for jwt
 RUN npm install @nestjs/jwt @nestjs/passport passport passport-jwt --save
 RUN npm i --save @nestjs/axios axios
+# for 42 passport
+RUN npm install passport-42
+RUN npm install passport-oauth2
+RUN npm i --save @nestjs/config
 
 
 ENTRYPOINT [ "tail", "-f" ]
