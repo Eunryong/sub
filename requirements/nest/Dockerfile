@@ -21,6 +21,8 @@ RUN npm install passport-oauth2 --save
 RUN npm install passport-42 --save
 # for config
 RUN npm install @nestjs/config --save
+# for cookie
+RUN npm i cookie-parser @types/cookie-parser
 
 
 ENTRYPOINT [ "tail", "-f" ]

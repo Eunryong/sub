@@ -1,14 +1,20 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { UserCreateDto } from 'src/user/dto/userCreate.dto';
-import { AuthService } from './auth.service';
+import { Controller, Get, Res, UseGuards } from '@nestjs/common';
+import { FtAuthGuard } from './42/guard/ft.guard';
+import { Response } from 'express'
 
 @Controller('auth')
 export class AuthController {
-	// constructor(private authService: AuthService) {}
 
-	// @HttpCode(HttpStatus.OK)
-	// @Post('login')
-	// signIn(@Body() signInDto: UserCreateDto) {
-	// 	return this.authService.signIn(signInDto);
-	// }
+	@Get()
+	test() {
+		return 'test';
+	}
+
+	@UseGuards(FtAuthGuard)
+	@Get('redirect')
+	async login(@Res() res: Response) {
+		res.cookie('token', '546546546');
+		res.redirect('http://localhost:3000/auth')
+		return 'success';
+	}
 }
