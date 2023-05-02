@@ -22,7 +22,7 @@ export class FTStrategy extends PassportStrategy(Strategy, 'ft') {
 
 	async validate(accessToken) {
 		try {
-			return this.authService.loginUser(accessToken);
+			return this.authService.authUser(accessToken);
 			// return accessToken;
 		} catch (error) {
 			console.log(error);

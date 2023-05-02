@@ -6,20 +6,27 @@ import { FTStrategy } from './42/ft.strategy';
 import { HttpModule } from '@nestjs/axios';
 import { JwtModule } from '@nestjs/jwt';
 import { DatabaseModule } from 'src/database/database.module';
+import { PassportModule } from '@nestjs/passport';
+import { UserService } from 'src/user/user.service';
 
 @Module({
 	imports: [
+		UserModule,
+		HttpModule,
+		DatabaseModule,
+		PassportModule.register({defaultStrategy: "jwt"}),
 		JwtModule.register({
 			global: true,
 			secret: 'Kkangji',
-			signOptions: { expiresIn: '60s' },
+			signOptions: { expiresIn: '300s' },
 		}),
-		UserModule,
-		HttpModule,
-		DatabaseModule
 	],
 	controllers: [AuthController],
-	providers: [AuthService, FTStrategy],
+	providers: [
+		AuthService,
+		UserService,
+		FTStrategy,
+	],
 	exports: [AuthService]
 })
 export class AuthModule {}

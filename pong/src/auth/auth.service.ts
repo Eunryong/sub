@@ -1,4 +1,4 @@
-import { Inject, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import { Inject, Injectable, InternalServerErrorException, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
@@ -36,7 +36,7 @@ export class AuthService {
 		}
 	}
 
-	async loginUser(accessToken: string): Promise<UserRegisterType> {
+	async authUser(accessToken: string) {
 		const userData = await this.FTApiUserMe(accessToken);
 		const user = this.userRepository.create({
 			id: userData.id,
@@ -51,16 +51,25 @@ export class AuthService {
 			this.logger.log('User already exist');
 			if (isUser.twoFactorAuth) {
 				this.logger.log('Two-factor auth');
-				return UserRegisterType.TWO_FACTOR_LOGIN;
+				return {
+					status: UserRegisterType.TWO_FACTOR_LOGIN,
+					user: user
+				};
 			} else {
-				return UserRegisterType.PASS;
+				return {
+					status: UserRegisterType.PASS,
+					user: user
+				};
 			}
 		}
 
 		try {
 			await this.userRepository.save(user);
 			this.logger.log('New user saved');
-			return UserRegisterType.FIRST_LOGIN;
+			return {
+				status: UserRegisterType.FIRST_LOGIN,
+				user: user
+			};
 		} catch (error) {
 			this.logger.log('Save failed');
 			throw new InternalServerErrorException();
@@ -69,12 +78,13 @@ export class AuthService {
 
 	async signIn(id: number, nick: string) {
 		const user = await this.userRepository.findOneBy({id: id});
+		if (!user)
+			throw new UnauthorizedException();
+
 		const payload = {
 			user_id: user.id,
 			user_nick: user.nick
 		};
-		return {
-			access_token: await this.jwtService.signAsync(payload)
-		}
+		return await this.jwtService.signAsync(payload);
 	}
 }
