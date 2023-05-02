@@ -14,7 +14,7 @@ export class AuthService {
 	private readonly logger = new Logger(AuthService.name);
 
 	async FTApiUserMe(accessToken: string) {
-		this.logger.log('Get data from 42 API');
+		this.logger.debug('Get data from 42 API');
 		const url = `https://api.intra.42.fr/v2/me`;
 		const headersRequest = {
 		'Content-Type': 'application/json',
@@ -48,9 +48,9 @@ export class AuthService {
 
 		const isUser = await this.userRepository.findOneBy({id: user.id});
 		if (isUser) {
-			this.logger.log('User already exist');
+			this.logger.debug('User already exist');
 			if (isUser.twoFactorAuth) {
-				this.logger.log('Two-factor auth');
+				this.logger.debug('Two-factor auth');
 				return {
 					status: UserRegisterType.TWO_FACTOR_LOGIN,
 					user: user
@@ -65,13 +65,13 @@ export class AuthService {
 
 		try {
 			await this.userRepository.save(user);
-			this.logger.log('New user saved');
+			this.logger.debug('New user saved');
 			return {
 				status: UserRegisterType.FIRST_LOGIN,
 				user: user
 			};
 		} catch (error) {
-			this.logger.log('Save failed');
+			this.logger.debug('Save failed');
 			throw new InternalServerErrorException();
 		}
 	}

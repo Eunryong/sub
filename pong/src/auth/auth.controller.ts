@@ -33,18 +33,16 @@ export class AuthController {
 	@Get('redirect')
 	async login(@User() user, @Res() res: Response) {
 		const jwt: string = await this.authService.signIn(user.id, user.nick);
-		// console.log(jwt);
-		res.setHeader('Authorization', 'Bearer '+jwt);
 		res.cookie('jwt',jwt);
 
 		if (user.status === UserRegisterType.PASS) {
-			this.logger.log('HOME');
+			this.logger.debug('HOME');
 			res.redirect('http://localhost:3000/auth/home');
 		} else if (user.status === UserRegisterType.TWO_FACTOR_LOGIN) {
-			this.logger.log('TWO_FACTOR');
+			this.logger.debug('TWO_FACTOR');
 			res.redirect('http://localhost:3000/auth/twoFactor');
 		} else if (user.status === UserRegisterType.FIRST_LOGIN) {
-			this.logger.log('FIRST_LOGIN');
+			this.logger.debug('FIRST_LOGIN');
 			res.redirect('http://localhost:3000/auth/initialize');
 		}
 	}
