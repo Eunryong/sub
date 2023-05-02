@@ -22,7 +22,7 @@ RUN npm install passport-42 --save
 # for config
 RUN npm install @nestjs/config --save
 # for cookie
-RUN npm i cookie-parser @types/cookie-parser --save
+# RUN npm i cookie-parser @types/cookie-parser --save
 
 
 ENTRYPOINT [ "tail", "-f" ]

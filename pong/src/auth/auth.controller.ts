@@ -4,7 +4,7 @@ import { FtAuthGuard } from './42/guard/ft.guard';
 import { User } from 'src/decorator/user.decorator';
 import UserRegisterType from './enum.user.register.type';
 import { AuthService } from './auth.service';
-import { JwtGuard } from './jwt/guard/jwt.guard';
+import { JwtGuard } from './jwt/jwt.guard';
 
 @Controller('auth')
 export class AuthController {
