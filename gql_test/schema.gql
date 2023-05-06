@@ -1,0 +1,47 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: Int!
+  nick: String!
+  email: String!
+  profileUrl: String!
+  twoFactorAuth: Boolean!
+}
+
+type Record {
+  id: Int
+  leftId: Int!
+  rightId: Int!
+  leftScore: Int!
+  rightScore: Int!
+  winner: Int!
+}
+
+type Query {
+  records: [Record!]!
+  recordById(id: Int!): Record!
+  recordByWinner(winner: Int!): Record!
+  user(id: Int!): User!
+  users: [User!]!
+}
+
+type Mutation {
+  createRecord(createRecordDto: CreateRecordDto!): Record!
+  createUser(createUserDto: CreateUserDto!): User!
+}
+
+input CreateRecordDto {
+  leftId: Int!
+  rightId: Int!
+  leftScore: Int!
+  rightScore: Int!
+}
+
+input CreateUserDto {
+  id: Int!
+  nick: String!
+  email: String!
+  profileUrl: String!
+}

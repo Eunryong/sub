@@ -16,16 +16,19 @@ RUN npm install @nestjs/jwt passport-jwt --save
 # for axios
 RUN npm install @nestjs/axios axios --save
 # for 42 passport
-RUN npm install passport @nestjs/passport --save
-RUN npm install passport-oauth2 --save
-RUN npm install passport-42 --save
+RUN npm install passport @nestjs/passport \
+	passport-oauth2 \
+	passport-42 --save
 # for config
 RUN npm install @nestjs/config --save
 # for cookie
 # RUN npm i cookie-parser @types/cookie-parser --save
 # for graphql
-# RUN npm install @nestjs/graphql apollo-server-express graphql-tools graphql --save
+RUN npm install @nestjs/typeorm typeorm mysql @nestjs/graphql apollo-server-express @nestjs/apollo --save
 # RUN npm install type-graphql --save
 
 
 ENTRYPOINT [ "tail", "-f" ]
+
+
+# RUN npm install @nestjs/graphql apollo-server-express graphql-tools graphql type-graphql --save

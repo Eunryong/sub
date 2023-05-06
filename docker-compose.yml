@@ -44,8 +44,8 @@ volumes:
       driver_opts:
         type: 'none'
         o : 'bind'
-        device: './pong'
-        # device: './gql_test'
+        # device: './pong'
+        device: './gql_test'
     db_volume:
       driver: 'local'
       driver_opts:
