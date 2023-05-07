@@ -1,7 +1,9 @@
+import { MailerService } from '@nestjs-modules/mailer';
 import { Inject, Injectable, InternalServerErrorException, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
+import { TwoFactorLog } from './auth.twoFactorLog';
 import UserRegisterType from './enum.user.register.type';
 
 @Injectable()
@@ -9,9 +11,11 @@ export class AuthService {
 	constructor(
 		@Inject('USER_REPOSITORY')
 		private userRepository: Repository<User>,
-		private jwtService: JwtService
+		private jwtService: JwtService,
+		private mailerService: MailerService
 	) {}
 	private readonly logger = new Logger(AuthService.name);
+	private twoFactorLogs: TwoFactorLog[] = [];
 
 	async FTApiUserMe(accessToken: string) {
 		this.logger.debug('Get data from 42 API');
@@ -76,7 +80,7 @@ export class AuthService {
 		}
 	}
 
-	async signIn(id: number, nick: string) {
+	async signIn(id: number) {
 		const user = await this.userRepository.findOneBy({id: id});
 		if (!user)
 			throw new UnauthorizedException();
@@ -86,5 +90,48 @@ export class AuthService {
 			user_nick: user.nick
 		};
 		return await this.jwtService.signAsync(payload);
+	}
+
+	twoFactorPublish(id: number) {
+		this.deleteLogByDate();
+
+		const randNum = Math.floor(Math.random() * 1000000);
+		this.twoFactorLogs.push({
+			id: id,
+			code: randNum,
+			expire: Math.floor(new Date().getTime() / 1000) + 300
+		});
+		// sendmail to id
+		this.mailerService.sendMail({
+			to: 'rlark1224@naver.com', // list of receivers
+			from: 'noreply@nestjs.com', // sender address
+			subject: 'Testing Nest MailerModule ✔', // Subject line
+			text: 'welcome', // plaintext body
+			html: '<b>welcome</b>', // HTML body content
+		})
+	}
+
+	checkMail(id: number, code: number) {
+		this.deleteLogByDate();
+
+		const arg: TwoFactorLog = this.twoFactorLogs.find(x => x.id === id);
+		if (!arg)
+			return false;
+
+		this.deleteLogById(arg.id);
+
+		if (arg.expire < Math.floor(new Date().getTime() / 1000))
+			return false;
+		if (arg.code === code)
+			return true;
+		return false
+	}
+
+	deleteLogByDate() {
+		this.twoFactorLogs = this.twoFactorLogs.filter(x => x.expire > Math.floor(new Date().getTime() / 1000))
+	}
+
+	deleteLogById(id: number) {
+		this.twoFactorLogs = this.twoFactorLogs.filter(x => x.id != id);
 	}
 }

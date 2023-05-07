@@ -1,4 +1,5 @@
 import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { User } from "src/user/user.entity";
 import { CreateRecordDto } from "./dto/createRecord.dto";
 import { Record } from "./record.entity";
 import { RecordService } from "./record.service";
@@ -18,8 +19,8 @@ export class RecordResolver {
 	}
 
 	@Query(() => Record, {name: 'recordByWinner'})
-	async getRecordByWinner(@Args('winner', {type: () => Int}) id: number) {
-		return this.recordService.findByWinner(id);
+	async getRecordByWinner(@Args('winner', {type: () => User}) winner: User) {
+		return this.recordService.findByWinner(winner);
 	}
 
 	@Mutation(() => Record)

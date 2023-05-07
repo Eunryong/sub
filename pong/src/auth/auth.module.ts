@@ -8,6 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { DatabaseModule } from 'src/database/database.module';
 import { PassportModule } from '@nestjs/passport';
 import { UserService } from 'src/user/user.service';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
 	imports: [
@@ -17,9 +18,34 @@ import { UserService } from 'src/user/user.service';
 		PassportModule.register({defaultStrategy: "jwt"}),
 		JwtModule.register({
 			global: true,
-			secret: 'Kkangji',
+			secret: process.env.JWT_SECRET,
 			signOptions: { expiresIn: '300s' },
 		}),
+		MailerModule.forRootAsync({
+            useFactory: () => ({
+				transport: {
+					service: 'Naver',
+					host: 'smtp.naver.com',
+					port: 587,
+					auth: {
+					  user: 'rlark1224@naver.com', // generated ethereal user
+					  pass: 'dgr650845*', // generated ethereal password
+					},
+				  },
+
+                // defaults: {
+                //     from: '"no-reply" <email address>',
+                // },
+                // preview: true,
+				// template: {
+                //   dir: __dirname + '/templates',
+                //   adapter: new PugAdapter(),
+                //   options: {
+                //     strict: true,
+                //   },
+                // },
+            })
+        }),
 	],
 	controllers: [AuthController],
 	providers: [

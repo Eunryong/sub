@@ -1,5 +1,6 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
-import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "src/user/user.entity";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @ObjectType()
 @Entity()
@@ -8,13 +9,13 @@ export class Record {
 	@PrimaryGeneratedColumn()
 	id: number;
 
-	@Field(() => Int)
-	@Column()
-	leftId: number;
+	@Field(() => User)
+	@ManyToOne(() => User)
+	leftId: User;
 
-	@Field(() => Int)
-	@Column()
-	rightId: number;
+	@Field(() => User)
+	@ManyToOne(() => User)
+	rightId: User;
 
 	@Field(() => Int)
 	@Column()
@@ -24,7 +25,7 @@ export class Record {
 	@Column()
 	rightScore: number;
 
-	@Field(() => Int)
-	@Column()
-	winner: number;
+	@Field(() => User)
+	@ManyToOne(() => User)
+	winner: User;
 }

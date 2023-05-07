@@ -8,9 +8,9 @@ export const databaseProviders = [
 		type: 'postgres', // db 종류
 		host: 'postgres', // host ip, container 이름으로 설정
 		port: 5432, // container port
-		username: 'dongyoki', // db 를 build 할 때 설정한 username
-		password: 'asdf', // 위와 동일
-		database: 'nestjs_app', // 위와 동일
+		username: process.env.POSTGRES_USER,
+		password: process.env.POSTGRES_PASSWORD,
+		database: process.env.POSTGRES_DB,
 		entities: [
 			__dirname + '/../**/*.entity{.ts,.js}',
 		], // 엔티티 파일의 위치?

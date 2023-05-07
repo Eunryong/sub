@@ -9,6 +9,9 @@ services:
 
     restart: always
 
+    env_file:
+      - ./requirements/.env
+
     ports:
       - "3000:3000"
     volumes:
@@ -26,10 +29,13 @@ services:
 
     restart: always
 
-    environment:
-      POSTGRES_DB: nestjs_app
-      POSTGRES_USER: dongyoki
-      POSTGRES_PASSWORD: asdf
+    env_file:
+      - ./requirements/.env
+
+    # environment:
+      # POSTGRES_DB: nestjs_app
+      # POSTGRES_USER: dongyoki
+      # POSTGRES_PASSWORD: asdf
 
     ports:
       - '5432:5432'
@@ -44,8 +50,7 @@ volumes:
       driver_opts:
         type: 'none'
         o : 'bind'
-        # device: './pong'
-        device: './gql_test'
+        device: './pong'
     db_volume:
       driver: 'local'
       driver_opts:

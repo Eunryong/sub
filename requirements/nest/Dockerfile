@@ -24,8 +24,11 @@ RUN npm install @nestjs/config --save
 # for cookie
 # RUN npm i cookie-parser @types/cookie-parser --save
 # for graphql
-RUN npm install @nestjs/typeorm typeorm mysql @nestjs/graphql apollo-server-express @nestjs/apollo --save
+# RUN npm install @nestjs/typeorm typeorm mysql @nestjs/graphql apollo-server-express @nestjs/apollo --save
 # RUN npm install type-graphql --save
+# for mail
+# RUN npm install @nestjs-modules/mailer nodemailer --save
+# RUN npm install pug --save
 
 
 ENTRYPOINT [ "tail", "-f" ]

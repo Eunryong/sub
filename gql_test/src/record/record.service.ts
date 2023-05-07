@@ -1,4 +1,5 @@
 import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
 import { CreateRecordDto } from './dto/createRecord.dto';
 import { Record } from './record.entity';
@@ -18,8 +19,8 @@ export class RecordService {
 		return await this.recordRepository.findOneBy({id: id});
 	}
 
-	async findByWinner(id: number) {
-		return await this.recordRepository.findOneBy({winner: id});
+	async findByWinner(user: User) {
+		return await this.recordRepository.findOneBy({winner: user});
 	}
 
 	async createRecord(createRecordDto: CreateRecordDto) {

@@ -1,12 +1,13 @@
 import { Field, InputType, Int } from "@nestjs/graphql";
+import { User } from "src/user/user.entity";
 
 @InputType()
 export class CreateRecordDto {
-	@Field(() => Int)
-	leftId: number;
+	@Field(() => User)
+	leftId: User;
 
-	@Field(() => Int)
-	rightId: number;
+	@Field(() => User)
+	rightId: User;
 
 	@Field(() => Int)
 	leftScore: number;
