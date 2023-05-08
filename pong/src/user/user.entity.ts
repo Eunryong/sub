@@ -6,7 +6,7 @@ export class User extends BaseEntity {
 	@PrimaryColumn()
 	id: number;
 
-	@Column()
+	@Column({nullable: true})
 	nick: string;
 
 	@Column()
@@ -15,6 +15,6 @@ export class User extends BaseEntity {
 	@Column()
 	profileUrl: string;
 
-	@Column()
+	@Column({default: false})
 	twoFactorAuth: boolean;
 }

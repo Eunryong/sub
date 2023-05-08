@@ -27,8 +27,11 @@ RUN npm install @nestjs/config --save
 # RUN npm install @nestjs/typeorm typeorm mysql @nestjs/graphql apollo-server-express @nestjs/apollo --save
 # RUN npm install type-graphql --save
 # for mail
-# RUN npm install @nestjs-modules/mailer nodemailer --save
-# RUN npm install pug --save
+RUN npm install @nestjs-modules/mailer nodemailer --save
+RUN npm install handlebars --save
+RUN npm install nodemailer --save
+# for multer
+RUN npm install @types/multer --save
 
 
 ENTRYPOINT [ "tail", "-f" ]

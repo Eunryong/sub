@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 
@@ -19,5 +19,25 @@ export class UserService {
 
 	async removeAll(): Promise<void> {
 		this.userRepository.clear();
+	}
+
+	async updateNick(id: number, nick: string) {
+		let user = await this.findOne(id);
+		user.nick = nick;
+		try {
+			await this.userRepository.save(user);
+		} catch (error) {
+			throw new ConflictException();
+		}
+	}
+
+	async updateProfile(id: number, profileName: string) {
+		let user = await this.findOne(id);
+		user.profileUrl= profileName;
+		try {
+			await this.userRepository.save(user);
+		} catch (error) {
+			throw new ConflictException();
+		}
 	}
 }

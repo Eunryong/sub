@@ -2,6 +2,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { Inject, Injectable, InternalServerErrorException, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/user/user.entity';
+import { UserService } from 'src/user/user.service';
 import { Repository } from 'typeorm';
 import { TwoFactorLog } from './auth.twoFactorLog';
 import UserRegisterType from './enum.user.register.type';
@@ -12,10 +13,51 @@ export class AuthService {
 		@Inject('USER_REPOSITORY')
 		private userRepository: Repository<User>,
 		private jwtService: JwtService,
-		private mailerService: MailerService
+		private userService: UserService
+		// private mailerService: MailerService
 	) {}
 	private readonly logger = new Logger(AuthService.name);
 	private twoFactorLogs: TwoFactorLog[] = [];
+	private nodemailer = require("nodemailer");
+	private mailService = this.nodemailer.createTransport({
+		service: 'Gmail',
+		auth: {
+			user: 'biisairo415@gmail.com',
+			pass: 'sizgumtczgnjsiek'
+		}
+	});
+
+// biisairo415@gmail.com
+// sizgumtczgnjsiek
+
+//////////////////////////////////////////
+	findAll() {
+		return this.twoFactorLogs;
+	}
+
+	removeAll() {
+		this.twoFactorLogs = [];
+	}
+
+	removeDate() {
+		this.deleteLogByDate();
+	}
+
+	async mailTest() {
+		this.logger.debug('mail start');
+		try {
+			this.mailService.sendMail({
+				from: 'BusPong <hello@world.com>',
+				to: 'rlark1224@naver.com',
+				subject: 'test',
+				text: `ttttttest`
+			})
+			return 'success'
+		} catch (error) {
+			return 'fail'
+		}
+	}
+//////////////////////////////////////////
 
 	async FTApiUserMe(accessToken: string) {
 		this.logger.debug('Get data from 42 API');
@@ -44,10 +86,8 @@ export class AuthService {
 		const userData = await this.FTApiUserMe(accessToken);
 		const user = this.userRepository.create({
 			id: userData.id,
-			nick: userData.nick,
 			email: userData.email,
 			profileUrl: userData.profileUrl,
-			twoFactorAuth: false
 		});
 
 		const isUser = await this.userRepository.findOneBy({id: user.id});
@@ -86,29 +126,37 @@ export class AuthService {
 			throw new UnauthorizedException();
 
 		const payload = {
-			user_id: user.id,
-			user_nick: user.nick
+			id: user.id,
+			nick: user.nick
 		};
 		return await this.jwtService.signAsync(payload);
 	}
 
-	twoFactorPublish(id: number) {
+	async twoFactorPublish(id: number) {
 		this.deleteLogByDate();
 
-		const randNum = Math.floor(Math.random() * 1000000);
+		const randNum: number = this.makeRandNum();
 		this.twoFactorLogs.push({
 			id: id,
 			code: randNum,
 			expire: Math.floor(new Date().getTime() / 1000) + 300
 		});
-		// sendmail to id
-		this.mailerService.sendMail({
-			to: 'rlark1224@naver.com', // list of receivers
-			from: 'noreply@nestjs.com', // sender address
-			subject: 'Testing Nest MailerModule ✔', // Subject line
-			text: 'welcome', // plaintext body
-			html: '<b>welcome</b>', // HTML body content
-		})
+		const user: User = await this.userRepository.findOneBy({id: id});
+		if (!user)
+			throw new UnauthorizedException();
+
+		const email = user.email;
+		try {
+			this.mailService.sendMail({
+				from: 'BusPong <hello@world.com>',
+				to: email,
+				subject: '인증 문자 전송',
+				text: `${randNum}`
+			})
+		} catch (error) {
+			return 'fail'
+		}
+		return randNum;
 	}
 
 	checkMail(id: number, code: number) {
@@ -117,14 +165,18 @@ export class AuthService {
 		const arg: TwoFactorLog = this.twoFactorLogs.find(x => x.id === id);
 		if (!arg)
 			return false;
-
 		this.deleteLogById(arg.id);
 
 		if (arg.expire < Math.floor(new Date().getTime() / 1000))
 			return false;
-		if (arg.code === code)
+		if (arg.code !== +code)
 			return true;
-		return false
+		return true
+	}
+
+	async updateUser(id: number, nick: string, file: Express.Multer.File) {
+		this.userService.updateNick(id, nick);
+		this.userService.updateProfile(id, file.filename);
 	}
 
 	deleteLogByDate() {
@@ -133,5 +185,12 @@ export class AuthService {
 
 	deleteLogById(id: number) {
 		this.twoFactorLogs = this.twoFactorLogs.filter(x => x.id != id);
+	}
+
+	makeRandNum(): number {
+		let randNum = Math.floor(Math.random() * 1000000);
+		while (100000 > randNum || randNum > 999999)
+			randNum = Math.floor(Math.random() * 1000000);
+		return randNum;
 	}
 }

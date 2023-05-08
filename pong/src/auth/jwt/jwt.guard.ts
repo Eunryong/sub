@@ -11,6 +11,8 @@ export class JwtGuard implements CanActivate {
 	: Promise<boolean> {
 		const request = context.switchToHttp().getRequest();
 		let cookies = request.headers.cookie;
+		if (!cookies)
+			throw new UnauthorizedException();
 		const token = this.extractJwt(cookies);
 		if (!token) {
 		  throw new UnauthorizedException();
