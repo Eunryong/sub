@@ -1,4 +1,5 @@
 import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import { existsSync, unlinkSync } from 'fs';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 
@@ -33,11 +34,18 @@ export class UserService {
 
 	async updateProfile(id: number, profileName: string) {
 		let user = await this.findOne(id);
-		user.profileUrl= profileName;
+
+		const oriPic = user.profileUrl.replace('http://localhost:3000/', '/public/');
+
+		user.profileUrl= 'http://localhost:3000/' + profileName;
 		try {
 			await this.userRepository.save(user);
 		} catch (error) {
 			throw new ConflictException();
+		}
+		console.log(oriPic);
+		if (existsSync(oriPic)) {
+			unlinkSync(oriPic);
 		}
 	}
 }

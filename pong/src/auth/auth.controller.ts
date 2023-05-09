@@ -1,15 +1,12 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post, Query, Req, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
-import { Request, Response } from 'express'
+import { Body, Controller, Get, Logger, Post, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Response } from 'express'
 import { FtAuthGuard } from './42/guard/ft.guard';
 import { User } from 'src/decorator/user.decorator';
 import UserRegisterType from './enum.user.register.type';
 import { AuthService } from './auth.service';
 import { JwtGuard } from './jwt/jwt.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { nextTick } from 'process';
-import { diskStorage } from 'multer';
-import { createReadStream } from 'fs';
-import { join } from 'path';
+import { multerOptions } from 'src/file/multer.options';
 
 // userid 131666
 
@@ -18,52 +15,10 @@ export class AuthController {
 	private readonly logger = new Logger(AuthController.name);
 	constructor(private authService: AuthService) {}
 
-//////////////////////////////////////////
 	@Get()
-	findAll() {
-		return this.authService.findAll();
+	oauth(@Res() res: Response) {
+		res.redirect(`https://api.intra.42.fr/oauth/authorize?client_id=${process.env.CLIENTID}&redirect_uri=${process.env.REDIRECTURI}&response_type=code`);
 	}
-
-	@Delete()
-	removeAll() {
-		return this.authService.removeAll();
-	}
-
-	@Get('test')
-	removeDate() {
-		return this.authService.removeDate();
-	}
-
-	@Get('mailTest')
-	async mailTest() {
-		return await this.authService.mailTest();
-	}
-
-	@Post('initializeTest')
-	@UseInterceptors(
-		FileInterceptor('file', {
-			storage: diskStorage({
-				destination: '/app/profilePics',
-			}),
-		}))
-	uploadFileTest(@UploadedFile() file: Express.Multer.File) {
-	  console.log(file);
-	  this.authService.updateUser(131666, 'dongyoki', file);
-	}
-
-	@Get(':id')
-	getImg(@Param('id') id, @Res() res: Response) {
-		console.log(id);
-		const url = `/app/profilePics/${id + '.png'}`;
-		res.sendFile(url);
-	}
-
-	@Get('file')
-	getFile(@Res() res: Response) {
-	  const file = createReadStream(join(process.cwd(), '/app/profilePics/536dd61b49788d333ae76f5519427333.png'));
-	  file.pipe(res);
-	}
-//////////////////////////////////////////
 
 	@UseGuards(JwtGuard)
 	@Get('initialize')
@@ -75,16 +30,10 @@ export class AuthController {
 	@UseGuards(JwtGuard)
 	@Post('initialize')
 	@UseInterceptors(
-		FileInterceptor('file', {
-			storage: diskStorage({
-				destination: '/app/profilePics',
-			}),
-		}))
+		FileInterceptor('file', multerOptions))
 	uploadFile(@User() user,
 		@Body('nick') nick,
 		@UploadedFile() file: Express.Multer.File) {
-	//   console.log(file);
-	//   console.log(nick);
 	  this.authService.updateUser(user.id, nick, file);
 	}
 
@@ -113,7 +62,7 @@ export class AuthController {
 	async login(@User() user, @Res() res: Response) {
 		const jwt: string = await this.authService.signIn(user.user.id);
 		res.cookie('jwt',jwt);
-		console.log(user.user.id);
+		console.log(jwt);
 
 		if (user.status === UserRegisterType.PASS) {
 			this.logger.debug('HOME');

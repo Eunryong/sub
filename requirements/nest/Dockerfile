@@ -32,6 +32,8 @@ RUN npm install handlebars --save
 RUN npm install nodemailer --save
 # for multer
 RUN npm install @types/multer --save
+# for static image
+RUN npm install @nestjs/serve-static --save
 
 
 ENTRYPOINT [ "tail", "-f" ]
