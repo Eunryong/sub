@@ -18,7 +18,7 @@ import { UserService } from 'src/user/user.service';
 		JwtModule.register({
 			global: true,
 			secret: process.env.JWT_SECRET,
-			signOptions: { expiresIn: '300s' },
+			signOptions: { expiresIn: '3003s' },
 		}),
 	],
 	controllers: [AuthController],

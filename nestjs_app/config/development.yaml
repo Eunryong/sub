@@ -1,8 +1,0 @@
-db:
-  host: 'postgres'
-  username: 'dongyoki'
-  password: 'asdf'
-  synchronize: true
-
-jwt:
-  secret: 'Secret1234'

@@ -34,6 +34,8 @@ RUN npm install nodemailer --save
 RUN npm install @types/multer --save
 # for static image
 RUN npm install @nestjs/serve-static --save
+# for validate
+RUN npm install class-validator class-transformer --save
 
 
 ENTRYPOINT [ "tail", "-f" ]
