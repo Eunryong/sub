@@ -14,9 +14,8 @@ export class JwtGuard implements CanActivate {
 		if (!cookies)
 			throw new UnauthorizedException();
 		const token = this.extractJwt(cookies);
-		if (!token) {
+		if (!token)
 		  throw new UnauthorizedException();
-		}
 
 		this.logger.debug('JWT valid start');
 		try {

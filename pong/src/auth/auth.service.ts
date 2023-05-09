@@ -77,7 +77,7 @@ export class AuthService {
 				profileUrl: response.data.image.link
 			};
 		} catch(error) {
-			console.log('42 API fail');
+			this.logger.debug('42 API fail');
 			throw new InternalServerErrorException();
 		}
 	}

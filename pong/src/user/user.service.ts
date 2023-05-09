@@ -30,7 +30,7 @@ export class UserService {
 		} catch (error) {
 			throw new ConflictException();
 		}
-	}
+	} // 동일닉네임 미리 체크
 
 	async updateProfile(id: number, profileName: string) {
 		let user = await this.findOne(id);

@@ -16,13 +16,16 @@ export class AuthController {
 
 	@Get()
 	oauth(@Res() res: Response) {
-		res.redirect(`https://api.intra.42.fr/oauth/authorize?client_id=${process.env.CLIENTID}&redirect_uri=${process.env.REDIRECTURI}&response_type=code`);
+		res.redirect(`https://api.intra.42.fr/oauth/authorize?client_id=${
+			process.env.CLIENTID
+		}&redirect_uri=${
+			process.env.REDIRECTURI
+		}&response_type=code`);
 	}
 
 	@UseGuards(JwtGuard)
 	@Get('initialize')
 	firstLogin(@GetUser() user) {
-		console.log(user);
 		return 'first';
 	}
 
@@ -31,11 +34,9 @@ export class AuthController {
 	@UseInterceptors(
 		FileInterceptor('file', multerOptions))
 	uploadFile(
-		@GetUser()
-		user,
+		@GetUser() user,
 		@Body(ValidationPipe) userNickDto: UserNickDto,
 		@UploadedFile() file: Express.Multer.File) {
-			console.log(userNickDto.nick);
 	  this.authService.updateUser(user.id, userNickDto.nick, file);
 	}
 

@@ -36,7 +36,8 @@ export class UserController {
 
 	@UseGuards(JwtGuard)
 	@Post('updateNick')
-	updateNick(@GetUser() user, @Body(ValidationPipe) userNickDto: UserNickDto) {
+	updateNick(@GetUser() user,
+		@Body() userNickDto: UserNickDto) {
 		this.userService.updateNick(user.id, userNickDto.nick);
 	}
 }
