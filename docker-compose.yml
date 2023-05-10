@@ -50,7 +50,7 @@ volumes:
       driver_opts:
         type: 'none'
         o : 'bind'
-        device: './pong'
+        device: './back'
     db_volume:
       driver: 'local'
       driver_opts:
