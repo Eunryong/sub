@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { RecordModule } from './record/record.module';
 import { DirectMessageModule } from './direct-message/direct-message.module';
+import { FollowModule } from './follow/follow.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { DirectMessageModule } from './direct-message/direct-message.module';
       isGlobal: true
     }),
     RecordModule,
-    DirectMessageModule
+    DirectMessageModule,
+    FollowModule,
   ],
   controllers: [],
   providers: [],
