@@ -43,6 +43,17 @@ services:
       - db_volume:/var/lib/postgresql/data
     networks:
       - ts_network
+    
+    react:
+      image: react
+      build: ./requirements/front/
+      container_name: react
+      restart: always
+      volumes:
+       - front_volume:/app
+      networks: -ts_network
+      ports:
+       -3306:3306
 
 volumes:
     nest_volume:
@@ -57,6 +68,12 @@ volumes:
         type: 'none'
         o: 'bind'
         device: './db'
+    front_volume:
+      driver: 'local'
+      driver_opts:
+        type: 'none'
+        o: 'bind'
+        device: './front'
 
 networks:
     ts_network:
